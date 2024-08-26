@@ -13,8 +13,6 @@ import streamlit as st
 from pages.navigation import navigation
 
 
-
-
 navigation()
 
 
@@ -209,9 +207,9 @@ class Calculation_Two_IMUs:
 #     return fig
 
 
-def main():
+def index():
 
-    file = IMUs("./data/20240722_test_2/data_0.csv")
+    file = IMUs("./data/data_0.csv")
 
     imus = file.get_imus_list()
     # imus[0].plot_euler()
@@ -221,12 +219,19 @@ def main():
 
     st.title("IMU Data")
 
+    st.selectbox(
+        label="Select an IMU",
+        options=["IMU-1", "IMU-2", "IMU-3", "IMU-4"],
+    )
+
     container = st.container(height=None, border=True)
 
     with container:
+
         col1, col2 = st.columns(2, gap="large",)
 
         with col1:
+
             st.subheader("Accelerometer")
 
             st.line_chart(
@@ -244,6 +249,7 @@ def main():
             )
 
         with col2:
+
             st.subheader("Magnetometer")
 
             st.line_chart(
@@ -253,7 +259,7 @@ def main():
             )
 
             st.subheader("Euler Angle")
-            
+
             st.line_chart(
                 imus[0].df,
                 x="index",
@@ -267,5 +273,4 @@ def main():
     return None
 
 
-if __name__ == "__main__":
-    main()
+index()
