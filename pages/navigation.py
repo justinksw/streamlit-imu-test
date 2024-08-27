@@ -48,6 +48,10 @@ def navigation():
             label="Angle Calculation"
         )
 
+        st.write("")
+        st.write("")
+        st.write("")
+
         st.button("Report")
 
         st.button("Log out")

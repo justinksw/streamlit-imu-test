@@ -221,7 +221,7 @@ def index():
 
     st.selectbox(
         label="Select an IMU",
-        options=["IMU-1", "IMU-2", "IMU-3", "IMU-4"],
+        options=["IMU-1", "IMU-2"],
     )
 
     container = st.container(height=None, border=True)
@@ -267,6 +267,9 @@ def index():
             )
 
     rotation = Calculation_Two_IMUs(imus[0], imus[1])
+
+
+    st.session_state
 
     # rotation.plot_rotation()
 
