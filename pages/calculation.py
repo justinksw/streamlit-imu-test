@@ -6,6 +6,8 @@ st.set_page_config(layout="wide")
 
 navigation()
 
+st.title("Rotation Calculation")
+
 rotation = st.session_state["rotation"]
 
 container = st.container(height=None, border=True)
