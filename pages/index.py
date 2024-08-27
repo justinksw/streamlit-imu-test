@@ -4,14 +4,11 @@ import pandas as pd
 from transforms3d import euler
 from transforms3d import quaternions as quat
 
-import matplotlib.pyplot as plt
-import plotly.figure_factory as ff
-import plotly.express as px
-
 import streamlit as st
 
 from pages.navigation import navigation
 
+st.set_page_config(layout="wide")
 
 navigation()
 
@@ -25,31 +22,6 @@ class IMU:  # each device
 
         self.device = device
         self.df = df
-
-    def plot_euler(self):
-
-        df = self.df[["EulerX", "EulerY", "EulerZ"]].head(10*60)
-
-        sr = 10
-
-        _x = np.linspace(0, len(df), len(df)) / sr
-
-        fig, ax = plt.subplots()
-
-        plt.plot(_x, df["EulerX"].to_numpy(), label="X")
-        plt.plot(_x, df["EulerY"].to_numpy(), label="Y")
-        plt.plot(_x, df["EulerZ"].to_numpy(), label="Z")
-
-        plt.title(self.device)
-
-        plt.ylabel("Rotation [Degrees]")
-        plt.xlabel("Time [Seconds]")
-
-        plt.grid()
-        plt.legend()
-        plt.show()
-
-        return None
 
     def get_quaternion(self):
 
@@ -162,30 +134,20 @@ class Calculation_Two_IMUs:
 
         return rotation
 
-    def plot_rotation(self):
+    def get_rotation_df(self):
+        data_ = self.get_rotation()
 
-        rotation = self.get_rotation()
+        # data_ = np.transpose(data)
 
-        sr = 10
+        df = pd.DataFrame({
+            "X": data_[:, 0],
+            "Y": data_[:, 1],
+            "Z": data_[:, 2],
+        })
 
-        # rotation = rotation[0: sr * 60]
+        df_ = df.reset_index()
 
-        fig, ax = plt.subplots()
-
-        _x = np.linspace(0, len(rotation), len(rotation)) / sr
-
-        plt.plot(_x, rotation[:, 0], label="X")
-        plt.plot(_x, rotation[:, 1], label="Y")
-        plt.plot(_x, rotation[:, 2], label="Z")
-
-        plt.ylabel("Rotation [Degrees]")
-        plt.xlabel("Time [Seconds]")
-
-        plt.grid()
-        plt.legend()
-        plt.show()
-
-        return None
+        return df_
 
 
 # def plotly_line_chart(df):
@@ -266,10 +228,9 @@ def index():
                 y=["EulerX", "EulerY", "EulerZ"]
             )
 
-    rotation = Calculation_Two_IMUs(imus[0], imus[1])
+    rotation = Calculation_Two_IMUs(imus[0], imus[1]).get_rotation_df()
 
-
-    st.session_state
+    st.session_state.rotation = rotation
 
     # rotation.plot_rotation()
 
